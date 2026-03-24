@@ -1,0 +1,146 @@
+/* Focus Prayer — Options page */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #0d0d0d;
+  --surface: #161616;
+  --border: #2a2a2a;
+  --text: #e8e8e8;
+  --text-muted: #666;
+  --accent: #c8a96e;
+  --accent-dim: #7a6540;
+  --sin: #c0392b;
+  --sin-light: #e74c3c;
+  --radius: 8px;
+  --font: 'Georgia', serif;
+  --font-ui: system-ui, sans-serif;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-ui);
+  font-size: 14px;
+  line-height: 1.6;
+  padding: 40px 24px;
+}
+
+.page { max-width: 640px; margin: 0 auto; }
+
+.wordmark {
+  font-family: var(--font);
+  font-size: 24px;
+  font-weight: normal;
+  color: var(--accent);
+  margin-bottom: 4px;
+}
+.subhead { color: var(--text-muted); font-size: 13px; margin-bottom: 40px; }
+
+.section { margin-bottom: 48px; }
+.section h2 {
+  font-family: var(--font);
+  font-size: 18px;
+  font-weight: normal;
+  color: var(--text);
+  margin-bottom: 6px;
+}
+.section-desc { color: var(--text-muted); font-size: 13px; margin-bottom: 20px; }
+
+/* --- Preset panel --- */
+.preset-panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: 16px;
+  overflow: hidden;
+}
+.preset-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  cursor: pointer;
+  user-select: none;
+}
+.preset-header:hover { background: #1e1e1e; }
+.preset-title { font-weight: 600; font-size: 14px; }
+.preset-toggle { color: var(--text-muted); font-size: 12px; }
+
+.preset-body { padding: 0 16px 16px; border-top: 1px solid var(--border); }
+.preset-body.hidden { display: none; }
+
+.domain-list { list-style: none; display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0; }
+.domain-tag {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #1e1e1e;
+  border: 1px solid var(--border);
+  border-radius: 99px;
+  padding: 3px 10px 3px 12px;
+  font-size: 12px;
+  color: var(--text);
+}
+.domain-tag.removed { text-decoration: line-through; color: var(--text-muted); border-color: transparent; }
+.domain-tag button {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 1;
+  padding: 0;
+}
+.domain-tag button:hover { color: var(--sin-light); }
+
+.add-domain-row { display: flex; gap: 8px; }
+.add-domain-row input {
+  flex: 1;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text);
+  font-size: 13px;
+  padding: 7px 12px;
+  outline: none;
+}
+.add-domain-row input:focus { border-color: var(--accent-dim); }
+.add-domain-row button {
+  padding: 7px 16px;
+  background: var(--accent);
+  border: none;
+  border-radius: var(--radius);
+  color: #0d0d0d;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* --- Sin history --- */
+.sin-empty { color: var(--text-muted); font-size: 13px; font-style: italic; }
+
+.sin-session {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: 12px;
+  overflow: hidden;
+}
+.sin-session-header {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+}
+.sin-session-intention { font-style: italic; color: var(--accent); font-family: var(--font); }
+.sin-session-meta { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+.sin-list { list-style: none; }
+.sin-entry {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 16px;
+  border-bottom: 1px solid var(--border);
+  font-size: 13px;
+}
+.sin-entry:last-child { border-bottom: none; }
+.sin-domain { color: var(--sin-light); }
+.sin-time { color: var(--text-muted); }

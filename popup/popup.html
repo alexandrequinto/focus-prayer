@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Focus Prayer</title>
+  <link rel="stylesheet" href="popup.css" />
+</head>
+<body>
+  <!-- VIEW: prayer (default when no active session) -->
+  <div id="view-prayer" class="view">
+    <header>
+      <h1 class="wordmark">Focus Prayer</h1>
+      <p class="subhead">Commit to your intention. Block the noise.</p>
+    </header>
+
+    <section class="field">
+      <label for="intention">What are you praying for?</label>
+      <textarea id="intention" placeholder="Ship the feature. Study for the exam. Write the chapter." rows="3" maxlength="200"></textarea>
+    </section>
+
+    <section class="field">
+      <label>Focus type</label>
+      <div id="preset-grid" class="preset-grid"></div>
+    </section>
+
+    <section class="field duration-row">
+      <label for="duration">Duration</label>
+      <div class="duration-controls">
+        <button class="dur-btn" data-min="25">25m</button>
+        <button class="dur-btn" data-min="50">50m</button>
+        <button class="dur-btn" data-min="90">90m</button>
+        <input type="number" id="duration" min="1" max="480" value="25" />
+        <span class="dur-unit">min</span>
+      </div>
+    </section>
+
+    <button id="btn-pray" class="btn-pray" disabled>Pray</button>
+  </div>
+
+  <!-- VIEW: committing (brief breath moment) -->
+  <div id="view-commit" class="view hidden">
+    <div class="commit-center">
+      <p class="commit-intention" id="commit-intention-text"></p>
+      <p class="commit-breath">Take a breath.</p>
+      <p class="commit-breath">You are about to commit.</p>
+      <button id="btn-begin" class="btn-begin">Begin</button>
+      <button id="btn-cancel-commit" class="btn-link">Cancel</button>
+    </div>
+  </div>
+
+  <!-- VIEW: active session -->
+  <div id="view-active" class="view hidden">
+    <header class="active-header">
+      <span class="sin-badge" id="sin-count-badge">0 sins</span>
+    </header>
+    <div class="active-center">
+      <p class="active-intention" id="active-intention-text"></p>
+      <div class="timer" id="timer-display">00:00</div>
+      <p class="active-label">remaining</p>
+    </div>
+    <button id="btn-end-session" class="btn-end">End session early</button>
+  </div>
+
+  <!-- VIEW: session complete -->
+  <div id="view-summary" class="view hidden">
+    <h2 class="summary-title">Session complete.</h2>
+    <p class="summary-intention" id="summary-intention-text"></p>
+    <div class="summary-stats">
+      <div class="stat">
+        <span class="stat-value" id="summary-duration"></span>
+        <span class="stat-label">focused</span>
+      </div>
+      <div class="stat">
+        <span class="stat-value" id="summary-sins"></span>
+        <span class="stat-label">sins</span>
+      </div>
+    </div>
+    <p class="summary-reflection" id="summary-reflection"></p>
+    <button id="btn-pray-again" class="btn-pray">Pray again</button>
+  </div>
+
+  <script type="module" src="popup.js"></script>
+</body>
+</html>

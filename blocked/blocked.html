@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>You are praying.</title>
+  <link rel="stylesheet" href="blocked.css" />
+</head>
+<body>
+  <div class="container">
+    <p class="eyebrow">You are praying.</p>
+    <p class="intention" id="intention-text"></p>
+    <p class="timer" id="timer-display">—</p>
+    <p class="timer-label">remaining</p>
+
+    <!-- Sin flow — hidden by default -->
+    <div id="sin-flow" class="sin-flow hidden">
+      <p class="sin-prompt">You are about to betray yourself.</p>
+      <p class="sin-sub">This will be counted. You will remember this.</p>
+      <div class="sin-actions">
+        <button id="btn-confirm-sin" class="btn-sin-confirm">I know. Let me through.</button>
+        <button id="btn-cancel-sin" class="btn-sin-cancel">Stay the course.</button>
+      </div>
+    </div>
+
+    <button id="btn-sin" class="btn-sin">I need to break focus</button>
+  </div>
+
+  <script type="module" src="blocked.js"></script>
+</body>
+</html>
