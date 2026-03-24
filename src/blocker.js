@@ -16,7 +16,7 @@ export async function applyBlockRules(domains = [], exceptions = []) {
     priority: 1,
     action: {
       type: 'redirect',
-      redirect: { url: BLOCKED_PAGE },
+      redirect: { url: `${BLOCKED_PAGE}?from=${encodeURIComponent(domain)}` },
     },
     condition: {
       urlFilter: `||${domain}^`,

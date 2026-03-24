@@ -46,7 +46,8 @@ function wireEvents() {
   });
 
   $('btn-confirm-sin').addEventListener('click', async () => {
-    const domain = new URL(document.referrer || location.href).hostname;
+    const params = new URLSearchParams(location.search);
+    const domain = params.get('from') || 'unknown';
     await chrome.runtime.sendMessage({ type: 'COMMIT_SIN', domain });
     history.back();
   });

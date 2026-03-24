@@ -17,7 +17,8 @@
   ],
 
   "background": {
-    "service_worker": "background.js"
+    "service_worker": "background.js",
+    "type": "module"
   },
 
   "action": {
@@ -46,7 +47,12 @@
 
   "web_accessible_resources": [
     {
-      "resources": ["blocked/blocked.html"],
+      "resources": [
+        "blocked/blocked.html",
+        "blocked/blocked.css",
+        "blocked/blocked.js",
+        "src/session.js"
+      ],
       "matches": ["<all_urls>"]
     }
   ]
