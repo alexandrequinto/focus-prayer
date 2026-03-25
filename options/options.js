@@ -1,6 +1,9 @@
 import { PRESETS, getBlockList, saveCustomization } from '../src/blockLists.js';
 import { getHistory } from '../src/history.js';
 
+const esc = (str) =>
+  String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+
 (async () => {
   await buildPresetPanels();
   await buildSinHistory();
@@ -44,11 +47,10 @@ async function buildPresetPanels() {
 
 function buildDomainList(presetKey, domains, customData) {
   const tags = domains.map((d) => {
-    const isCustomAdded = customData.add.includes(d);
     return `
-      <li class="domain-tag" data-domain="${d}">
-        ${d}
-        <button data-preset="${presetKey}" data-domain="${d}" title="Remove" aria-label="Remove ${d}">×</button>
+      <li class="domain-tag" data-domain="${esc(d)}">
+        ${esc(d)}
+        <button data-preset="${esc(presetKey)}" data-domain="${esc(d)}" title="Remove" aria-label="Remove ${esc(d)}">×</button>
       </li>
     `;
   }).join('');
@@ -120,14 +122,14 @@ async function buildSinHistory() {
 
     const sinItems = session.sins.map((sin) => `
       <li class="sin-entry">
-        <span class="sin-domain">${sin.domain}</span>
+        <span class="sin-domain">${esc(sin.domain)}</span>
         <span class="sin-time">${new Date(sin.at).toLocaleTimeString()}</span>
       </li>
     `).join('');
 
     el.innerHTML = `
       <div class="sin-session-header">
-        <div class="sin-session-intention">"${session.intention}"</div>
+        <div class="sin-session-intention">"${esc(session.intention)}"</div>
         <div class="sin-session-meta">
           ${new Date(session.startedAt).toLocaleDateString()} · ${session.sins.length} sin${session.sins.length === 1 ? '' : 's'}
         </div>
