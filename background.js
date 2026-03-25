@@ -32,7 +32,7 @@ chrome.alarms.onAlarm.addListener(async (alarm) => {
   }
 });
 
-export async function startSession(session) {
+async function startSession(session) {
   await saveSession(session);
   await applyBlockRules(session.blockList);
   chrome.alarms.create('focus-prayer-session-end', {
@@ -40,7 +40,7 @@ export async function startSession(session) {
   });
 }
 
-export async function endSession() {
+async function endSession() {
   const session = await getSession();
   if (!session) return;
 
@@ -53,7 +53,7 @@ export async function endSession() {
   await saveSession(completed);
 }
 
-export async function commitSin(domain) {
+async function commitSin(domain) {
   const session = await getSession();
   if (!session) return;
 

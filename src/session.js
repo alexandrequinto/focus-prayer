@@ -16,10 +16,6 @@ export async function clearSession() {
   await chrome.storage.local.remove(KEY);
 }
 
-export function isActive(session) {
-  return session && session.status === 'active';
-}
-
 export function timeRemainingMs(session) {
   if (!session) return 0;
   const elapsed = Date.now() - session.startedAt;

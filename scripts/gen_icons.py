@@ -9,8 +9,6 @@ import os
 
 BG     = (13, 13, 13, 255)
 GOLD   = (200, 169, 110, 255)
-GOLD_D = (150, 120, 72, 255)   # darker base of flame
-TRANS  = (0, 0, 0, 0)
 
 def lerp(a, b, t):
     return a + (b - a) * t
