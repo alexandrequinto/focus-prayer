@@ -15,7 +15,7 @@
     </header>
 
     <section class="field">
-      <label for="intention">What are you praying for?</label>
+      <label for="intention">What are you praying for? <span class="label-optional">(or leave blank for silence)</span></label>
       <textarea id="intention" placeholder="Ship the feature. Study for the exam. Write the chapter." rows="3" maxlength="200"></textarea>
     </section>
 
@@ -42,9 +42,12 @@
   <div id="view-commit" class="view hidden">
     <div class="commit-center">
       <p class="commit-intention" id="commit-intention-text"></p>
-      <p class="commit-breath">Take a breath.</p>
-      <p class="commit-breath">You are about to commit.</p>
-      <button id="btn-begin" class="btn-begin">Begin</button>
+      <div class="breath-wrap">
+        <div class="breath-ring"></div>
+      </div>
+      <p class="commit-breath-line">Close your eyes.</p>
+      <p class="commit-breath-line">Feel the weight of your intention.</p>
+      <button id="btn-begin" class="btn-begin" disabled>Begin</button>
       <button id="btn-cancel-commit" class="btn-link">Cancel</button>
     </div>
   </div>

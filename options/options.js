@@ -1,4 +1,5 @@
 import { PRESETS, getBlockList, saveCustomization } from '../src/blockLists.js';
+import { getHistory } from '../src/history.js';
 
 (async () => {
   await buildPresetPanels();
@@ -104,12 +105,9 @@ async function getCustomData(key) {
 
 async function buildSinHistory() {
   const container = document.getElementById('sin-history');
-  const result = await chrome.storage.local.get(null);
 
-  // Collect all completed sessions with sins
-  const sessions = Object.values(result)
-    .filter((v) => v && v.status === 'complete' && v.sins?.length > 0)
-    .sort((a, b) => b.startedAt - a.startedAt);
+  const all = await getHistory();
+  const sessions = all.filter((s) => s.sins?.length > 0);
 
   if (sessions.length === 0) {
     container.innerHTML = '<p class="sin-empty">No sins on record. Keep it that way.</p>';

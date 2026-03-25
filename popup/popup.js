@@ -1,9 +1,10 @@
 import { PRESETS, getBlockList } from '../src/blockLists.js';
-import { isActive, timeRemainingMs } from '../src/session.js';
+import { timeRemainingMs } from '../src/session.js';
 
 // --- State ---
 let selectedPreset = null;
 let timerInterval = null;
+let beginUnlockTimer = null;
 
 // --- DOM refs ---
 const views = {
@@ -14,6 +15,44 @@ const views = {
 };
 
 const $ = (id) => document.getElementById(id);
+
+// --- Reflection copy pools ---
+const REFLECTIONS_CLEAN = [
+  'You held the line. That was real.',
+  'Every minute was yours. Well done.',
+  'You showed up for yourself.',
+  'The prayer was answered.',
+  'Unbroken. Remember this feeling.',
+];
+
+const REFLECTIONS_ONE = [
+  'One moment of weakness. The rest was yours.',
+  'You slipped once. You stayed for everything else.',
+  'One sin. File it away. Come back stronger.',
+];
+
+const REFLECTIONS_FEW = [
+  'The pull was strong today. Keep showing up.',
+  'A few breaks. The commitment still counts.',
+  'You came back each time. That matters.',
+];
+
+const REFLECTIONS_MANY = [
+  'The distractions won this round. Next prayer, let it hold.',
+  'This one got away from you. You know what to do differently.',
+  'Scattered. It happens. The prayer is still worth making.',
+];
+
+function pick(arr) {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
+function reflectionLine(sins) {
+  if (sins === 0) return pick(REFLECTIONS_CLEAN);
+  if (sins === 1) return pick(REFLECTIONS_ONE);
+  if (sins <= 3) return pick(REFLECTIONS_FEW);
+  return pick(REFLECTIONS_MANY);
+}
 
 // --- Init ---
 (async () => {
@@ -51,7 +90,7 @@ function selectPreset(key) {
   validateForm();
 }
 
-// --- Duration buttons ---
+// --- Wire events ---
 function wireEvents() {
   document.querySelectorAll('.dur-btn').forEach((btn) => {
     btn.addEventListener('click', () => {
@@ -66,26 +105,44 @@ function wireEvents() {
 
   $('btn-pray').addEventListener('click', onPrayClick);
   $('btn-begin').addEventListener('click', onBeginClick);
-  $('btn-cancel-commit').addEventListener('click', () => showView('prayer'));
+  $('btn-cancel-commit').addEventListener('click', onCancelCommit);
   $('btn-end-session').addEventListener('click', onEndSession);
   $('btn-pray-again').addEventListener('click', onPrayAgain);
 }
 
 function validateForm() {
-  const hasIntention = $('intention').value.trim().length > 0;
+  // Intention is optional — blank = "Silence"
   const hasDuration = parseInt($('duration').value) > 0;
-  $('btn-pray').disabled = !(hasIntention && hasDuration && selectedPreset);
+  $('btn-pray').disabled = !(hasDuration && selectedPreset);
 }
 
 // --- Prayer flow ---
 function onPrayClick() {
-  const intention = $('intention').value.trim();
-  $('commit-intention-text').textContent = `"${intention}"`;
+  const raw = $('intention').value.trim();
+  const intention = raw || 'Silence';
+  const display = raw ? `"${raw}"` : 'Silence.';
+  $('commit-intention-text').textContent = display;
+
+  // Store resolved intention for Begin
+  $('btn-begin').dataset.intention = intention;
+
   showView('commit');
+
+  // Lock Begin for 2.5s — let the breath land
+  $('btn-begin').disabled = true;
+  clearTimeout(beginUnlockTimer);
+  beginUnlockTimer = setTimeout(() => {
+    $('btn-begin').disabled = false;
+  }, 2500);
+}
+
+function onCancelCommit() {
+  clearTimeout(beginUnlockTimer);
+  showView('prayer');
 }
 
 async function onBeginClick() {
-  const intention = $('intention').value.trim();
+  const intention = $('btn-begin').dataset.intention || 'Silence';
   const durationMinutes = parseInt($('duration').value);
   const blockList = await getBlockList(selectedPreset);
 
@@ -106,7 +163,8 @@ async function onBeginClick() {
 
 // --- Active view ---
 function showActiveView(session) {
-  $('active-intention-text').textContent = `"${session.intention}"`;
+  const label = session.intention === 'Silence' ? 'Silence.' : `"${session.intention}"`;
+  $('active-intention-text').textContent = label;
   updateSinBadge(session.sins?.length || 0);
   showView('active');
   startTimer(session);
@@ -119,7 +177,6 @@ function startTimer(session) {
     $('timer-display').textContent = formatTime(ms);
     if (ms <= 0) {
       clearInterval(timerInterval);
-      // Background will have ended it; reload to show summary
       setTimeout(() => window.location.reload(), 500);
     }
   };
@@ -142,10 +199,11 @@ async function onEndSession() {
 
 // --- Summary view ---
 function showSummaryView(session) {
-  $('summary-intention-text').textContent = `"${session.intention}"`;
+  const label = session.intention === 'Silence' ? 'Silence.' : `"${session.intention}"`;
+  $('summary-intention-text').textContent = label;
 
   const elapsed = session.endedAt
-    ? Math.floor((session.endedAt - session.startedAt) / 60000)
+    ? Math.max(1, Math.floor((session.endedAt - session.startedAt) / 60000))
     : session.durationMinutes;
   $('summary-duration').textContent = `${elapsed}m`;
 
@@ -156,15 +214,9 @@ function showSummaryView(session) {
   showView('summary');
 }
 
-function reflectionLine(sins) {
-  if (sins === 0) return 'You held the line. That was real.';
-  if (sins === 1) return 'One moment of weakness. You are still learning.';
-  if (sins <= 3) return 'The distractions pulled at you. Keep showing up.';
-  return 'Next time, let the prayer hold you longer.';
-}
-
 function onPrayAgain() {
-  sendMsg({ type: 'END_SESSION' });
+  clearInterval(timerInterval);
+  sendMsg({ type: 'CLEAR_SESSION' });
   showView('prayer');
   selectedPreset = null;
   $('intention').value = '';

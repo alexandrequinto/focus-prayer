@@ -2,6 +2,37 @@ import { timeRemainingMs } from '../src/session.js';
 
 const $ = (id) => document.getElementById(id);
 
+const GUILT = [
+  {
+    prompt: 'You are about to betray yourself.',
+    sub: 'You said this mattered. It still does.',
+  },
+  {
+    prompt: 'You made a promise.',
+    sub: 'Not to anyone else. To yourself. That\'s the hardest one to break.',
+  },
+  {
+    prompt: 'This is the moment that separates you.',
+    sub: 'The version of you that stayed — and the one that didn\'t.',
+  },
+  {
+    prompt: 'The distraction will still be there later.',
+    sub: 'This focus won\'t be.',
+  },
+  {
+    prompt: 'You already know how this feels.',
+    sub: 'You\'ve been here before. You know what comes after.',
+  },
+  {
+    prompt: 'One click away from breaking it.',
+    sub: 'Is whatever\'s over there worth more than what you\'re building here?',
+  },
+  {
+    prompt: 'This will be recorded.',
+    sub: 'Not by anyone watching. By you. You\'ll know.',
+  },
+];
+
 let session = null;
 let timerInterval = null;
 
@@ -9,12 +40,12 @@ let timerInterval = null;
   session = await chrome.runtime.sendMessage({ type: 'GET_SESSION' });
 
   if (!session || session.status !== 'active') {
-    // No active session — redirect home
-    window.location.href = 'https://www.google.com';
+    window.location.href = 'about:blank';
     return;
   }
 
-  $('intention-text').textContent = `"${session.intention}"`;
+  const label = session.intention === 'Silence' ? 'Silence.' : `"${session.intention}"`;
+  $('intention-text').textContent = label;
   startTimer();
   wireEvents();
 })();
@@ -26,7 +57,6 @@ function startTimer() {
     if (ms <= 0) {
       clearInterval(timerInterval);
       $('timer-display').textContent = '00:00';
-      // Session ended naturally — go back
       setTimeout(() => history.back(), 800);
     }
   };
@@ -36,6 +66,9 @@ function startTimer() {
 
 function wireEvents() {
   $('btn-sin').addEventListener('click', () => {
+    const g = GUILT[Math.floor(Math.random() * GUILT.length)];
+    $('sin-prompt-text').textContent = g.prompt;
+    $('sin-sub-text').textContent = g.sub;
     $('sin-flow').classList.remove('hidden');
     $('btn-sin').style.display = 'none';
   });
