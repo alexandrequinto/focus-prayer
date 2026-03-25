@@ -59,6 +59,10 @@ Full policy: [PRIVACY.md](./PRIVACY.md)
 
 ---
 
+## License
+
+[GPL-3.0](./LICENSE) — Alexandre Quinto, 2026
+
 ## Contributing
 
 Issues and PRs welcome.
